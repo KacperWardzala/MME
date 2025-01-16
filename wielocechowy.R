@@ -83,10 +83,10 @@ trait2 = diag(invC22)[500:998]
 
 (r2_1 = (235.55-trait1) / 235.55)
 (r2_2 = (8134.30-trait2) / 8134.30)
+r2_1[r2 < 0] = 0
+r2_2[r2 < 0] = 0
 
 (r1 = sqrt(r2_1))
 (r2 = sqrt(r2_2))
 
 cbind(round(r1, digits = 3), round(r2, digits = 3))
-
-#tutaj niestety dużo wartości ujemnych przez co nasze r1 ma pełno missing value
