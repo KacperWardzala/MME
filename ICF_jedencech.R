@@ -1,4 +1,7 @@
 library(MASS)
+
+
+
 y_ICF = ICF$ICF
 
 
@@ -78,7 +81,5 @@ invC_ICF = ginv(C)
 
 invC22_ICF = invC_ICF[19:499, 19:499]
 (r2_ICF = diag(1 - invC_ICF*(0.008426684/0.02629626)))
+r2_ICF[r2 < 0] = 0
 (r_ICF = sqrt(r2_ICF))
-
-
-
