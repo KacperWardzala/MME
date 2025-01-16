@@ -1,4 +1,7 @@
 library(MASS)
+
+
+
 y = IFL$phenotype
 
 
@@ -80,4 +83,5 @@ invC = ginv(C)
 invC22 = invC[19:499, 19:499]
 
 (r2 = diag(1 - invC*(0.007582836/0.02086693)))
+r2[r2 < 0] = 0
 (r = sqrt(r2))
