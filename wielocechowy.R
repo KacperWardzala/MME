@@ -77,22 +77,20 @@ cor(est_1_new, est_2_new)
 C = as.matrix(mme3(y_m, X, Z, A, G, R)$C)
 invC = ginv(C)
 
-invC22 = invC[998:1036, 998:1036]
+invC22 = invC[39:1036, 39:1036]
 
-trait1 = diag(invC22)[1:19]
-trait2 = diag(invC22)[20:39]
+trait1 = diag(invC22)[1:499]
+trait2 = diag(invC22)[500:998]
 
 (r2_1 = (235.55-trait1) / 235.55)
-(r2_2 = (8134.30-trait2) / 8134.30)
+(r2_2 = (412.24-trait2) / 412.24)
 r2_1[r2_1 < 0] = 0
 r2_2[r2_2 < 0] = 0
 
 (r1 = sqrt(r2_1))
 (r2 = sqrt(r2_2))
 
-cbind(round(r1, digits = 3), round(r2, digits = 3))
+cbind(r1, r2)
 
 r1_wielo = r1
 r2_wielo = r2
-
-#tutaj niestety dużo wartości ujemnych przez co nasze r1 ma pełno missing value
