@@ -30,7 +30,7 @@ library(MASS)
 mme3 = function(y, X, Z, A, G, R) {
   invA = ginv(A)
   invG = ginv(G)
-
+  
   
   R = kronecker(R, diag(179))
   invR = ginv(R)
@@ -38,6 +38,7 @@ mme3 = function(y, X, Z, A, G, R) {
   
   C = rbind(cbind(t(X)%*%invR%*%X, t(X)%*%invR%*%Z),
             cbind(t(Z)%*%invR%*%X, t(Z)%*%invR%*%Z+kronecker(invG, invA)))
+  print(dim(t(Z)%*%invR%*%Z+kronecker(invG, invA)))
   rhs = rbind(t(X)%*%invR%*%y, t(Z)%*%invR%*%y)
   invC = ginv(C)
   estimators = invC%*%rhs
@@ -76,17 +77,22 @@ cor(est_1_new, est_2_new)
 C = as.matrix(mme3(y_m, X, Z, A, G, R)$C)
 invC = ginv(C)
 
-invC22 = invC[38:998, 38:998]
+invC22 = invC[998:1036, 998:1036]
 
-trait1 = diag(invC22)[1:499]
-trait2 = diag(invC22)[500:998]
+trait1 = diag(invC22)[1:19]
+trait2 = diag(invC22)[20:39]
 
 (r2_1 = (235.55-trait1) / 235.55)
 (r2_2 = (8134.30-trait2) / 8134.30)
-r2_1[r2 < 0] = 0
-r2_2[r2 < 0] = 0
+r2_1[r2_1 < 0] = 0
+r2_2[r2_2 < 0] = 0
 
 (r1 = sqrt(r2_1))
 (r2 = sqrt(r2_2))
 
 cbind(round(r1, digits = 3), round(r2, digits = 3))
+
+r1_wielo = r1
+r2_wielo = r2
+
+#tutaj niestety dużo wartości ujemnych przez co nasze r1 ma pełno missing value
