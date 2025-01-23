@@ -146,7 +146,7 @@ z12 = cov(res_IFL,res_ICF)
 
 
 #G = rbind(c(6434.149, g12), c(g12, 37.19625))
-G = rbind(c(g11, g12), c(g22, g12))
+G = rbind(c(g11, g12), c(g12, g22))
 G
 
 #R = rbind(c(53.38752, z12),c(z12, 4.768613))
