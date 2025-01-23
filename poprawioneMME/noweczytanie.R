@@ -115,10 +115,10 @@ ICF = phenotypes$ICF
 heard = model.matrix(~ as.factor(org_id$heard[321:499]) -1)
 birth = model.matrix(~ as.factor(org_id$YOB[321:499]) -1)
 
-# Macierz efektów losowych
+# Macierz efektów stałch
 X = cbind(heard, birth)
 
-# Macierz efektów stałych
+# Macierz efektów losowych
 Z = matrix(0, nrow = nrow(phenotypes), ncol = nrow(A))
 
 # Macierz jednostkowa
