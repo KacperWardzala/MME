@@ -1,5 +1,5 @@
-y1 = as.numeric(y)
-y2 = y_ICF
+y1 = IFL
+y2 = ICF
 
 
 
@@ -20,7 +20,7 @@ I = diag(nrow(phenotypes))
 Z[1:179, 321:499] = I
 Z[180:358, 820:998] = I
 
-y_m = as.matrix(c(y1, y2))
+y_m = as.matrix(c(y1,y2))
 
 
 library(MASS)
@@ -49,8 +49,8 @@ results = mme3(y_m, X, Z, A, G, R)
 results
 
 
-est_IFL = results$est[321:499]
-est_ICF = results$est[820:998]
+est_IFL = results$est[340:518]
+est_ICF = results$est[858:1036]
 
 #standaryzacja
 
@@ -71,8 +71,8 @@ invC22 = invC[39:nrow(invC), 39:nrow(invC)]
 trait1 = diag(invC22)[1:499]
 trait2 = diag(invC22)[500:998]
 
-(r2_IFL = (6277.935-trait1) / 6277.935)
-(r2_ICF = (6017.857-trait2) / 6017.857)
+(r2_IFL = (g11-trait1) / g11)
+(r2_ICF = (g22-trait2) / g22)
 r2_IFL[r2_IFL < 0] = 0
 r2_ICF[r2_ICF < 0] = 0
 
@@ -84,12 +84,33 @@ cbind(rIFL, rIFL)
 rICF_wielo = rIFL
 rIFL_wielo = rICF
 
-plot(rIFL_wielo, ylim = c(0, 1))
-plot(rICF_wielo, ylim = c(0, 1))
+plot(rIFL_wielo, ylim = c(0, 1), main = 'wartości r dla cechy IFL westymowanej modelem wielocechowym')
+plot(rICF_wielo, ylim = c(0, 1), main = 'wartości r dla cechy ICF westymowanej modelem wielocechowym')
 
 
-plot(IFL_std, est_IFL_std, main = 'Obserwowane IFLvs estymowana wartosc hodowlana')
-plot(ICF_std, est_ICF_std, main = 'Obserwowane ICF vs estymowana wartosc hodowlana')
+# Dopasowanie regresji liniowej dla IFL
+model_IFL <- lm(IFL_std ~ est_IFL_std)  # Regresja liniowa
+cor_IFL <- cor(est_IFL_std, IFL_std)    # Korelacja
 
+# Wykres z linią trendu dla IFL
+plot(est_IFL_std, IFL_std, 
+     main = "Obserwowane IFL vs estymowana wartość hodowlana",
+     ylim = c(90, 160), 
+     xlab = "Estymowana wartość IFL (standaryzowana)", 
+     ylab = "Obserwowana wartość IFL (standaryzowana)")
+abline(model_IFL, col = "red", lwd = 2)  # Dodanie linii trendu w kolorze czerwonym
 
+# Dopasowanie regresji liniowej dla ICF
+model_ICF <- lm(ICF_std ~ est_ICF_std)  # Regresja liniowa
+cor_ICF <- cor(est_ICF_std, ICF_std)    # Korelacja
+
+# Wykres z linią trendu dla ICF
+plot(est_ICF_std, ICF_std, 
+     main = "Obserwowane ICF vs estymowana wartość hodowlana",
+     ylim = c(90, 160), 
+     xlab = "Estymowana wartość ICF (standaryzowana)", 
+     ylab = "Obserwowana wartość ICF (standaryzowana)")
+abline(model_ICF, col = "blue", lwd = 2)  # Dodanie linii trendu w kolorze niebieskim
+
+boxplot(list(r_IFL,r_ICF, rIFL_wielo, rICF_wielo), names = c('r IFL', 'r ICF', 'r IFL mt', 'r ICF mt')  ,main = 'Porównanie wartości r')
 
