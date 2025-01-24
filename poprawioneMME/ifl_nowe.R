@@ -19,13 +19,12 @@ mme_ifl = mme(y, X, Z, A, g11, z11)
 mme_ifl
 
 
-est = mme(y, X, Z, A, g11, z11)$est[321:499]
-(m = mean(est))
-(s = sd(est))
+
+
 
 # IFL
-random_IFL = mme_ifl$est[20:length(mme_ifl$est)]
-random_observed_IFL = random_IFL[321:499]
+
+random_observed_IFL = mme_ifl$est[340:518]
 
 #standaryzacja do porownania
 IFL_std = 10*(IFL- mean(IFL)) / sd(IFL) + 100
@@ -36,7 +35,7 @@ random_observed_IFL_std = 10*(random_observed_IFL - mean(random_observed_IFL)) /
 C = as.matrix(mme(y, X, Z, A,g11 , z11)$C)
 invC = ginv(C)
 
-invC22 = invC[19:499, 19:499]
+invC22 = invC[19:518, 19:518]
 
 (r2 = diag(1 - invC22*(as.numeric(z11)/as.numeric(g11))))
 r2[r2 < 0] = 0
@@ -44,7 +43,20 @@ r2[r2 < 0] = 0
 
 r_IFL = r
 
-plot(r_IFL, ylim = c(0, 1))
+plot(r_IFL, ylim = c(0, 1), main = 'Dokładność oszacowania dla IFL')
+abline(v = 320, col = "red", lwd = 2, lty = 2) 
 
-plot(IFL_std, random_observed_IFL_std,main = 'Obserwowane IFL vs estymowana wartosc hodowlana')
+#plot(IFL_std, random_observed_IFL_std,main = 'Obserwowane IFL vs estymowana wartosc hodowlana')
+
+# Dopasowanie regresji liniowej dla IFL
+model_IFL <- lm(IFL_std ~ random_observed_IFL_std)  # Regresja liniowa
+cor_IFL <- cor(random_observed_IFL_std, IFL_std)    # Korelacja
+
+# Wykres z linią trendu dla IFL
+plot(random_observed_IFL_std, IFL_std, 
+     main = "Obserwowane IFL vs estymowana wartość hodowlana",
+     ylim = c(90, 160), 
+     xlab = "Estymowana wartość IFL (standaryzowana)", 
+     ylab = "Obserwowana wartość IFL (standaryzowana)")
+abline(model_IFL, col = "red", lwd = 2)  # Dodanie linii trendu w kolorze czerwonym
 
