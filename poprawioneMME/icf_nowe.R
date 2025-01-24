@@ -21,7 +21,7 @@ mme_icf
 
 # ICF
 random_ICF = mme_icf$est[20:length(mme_icf$est)]
-random_observed_ICF = random_ICF[321:499]
+random_observed_ICF = mme_icf$est[340:518]
 
 
 
@@ -33,14 +33,29 @@ random_observed_ICF_std = 10*(random_observed_ICF - mean(random_observed_ICF)) /
 C = as.matrix(mme(y_ICF, X, Z, A, g22, z22)$C)
 invC_ICF = ginv(C)
 
-invC22_ICF = invC_ICF[19:499, 19:499]
+invC22_ICF = invC_ICF[19:518, 19:518]
 (r2_ICF = diag(1 - invC22_ICF*(as.numeric(z22)/as.numeric(g22))))
 r2_ICF[r2_ICF < 0] = 0
 (r_ICF = sqrt(r2_ICF))
 
-plot(r_ICF, ylim = c(0, 1))
+plot(r_ICF, ylim = c(0, 1), main = 'Dokładność oszacowania dla ICF')
 
 
 
-plot(ICF_std, random_observed_ICF_std, main = 'Obserwowane ICF vs estymowana wartosc hodowlana')
+#plot(ICF_std, random_observed_ICF_std, main = 'Obserwowane ICF vs estymowana wartosc hodowlana')
+
+# Dopasowanie regresji liniowej dla ICF
+model_ICF <- lm(ICF_std ~ random_observed_ICF_std)  # Regresja liniowa
+cor_ICF <- cor(random_observed_ICF_std, ICF_std)    # Korelacja
+
+# Wykres z linią trendu dla ICF
+plot(random_observed_ICF_std, ICF_std, 
+     main = "Obserwowane ICF vs estymowana wartość hodowlana",
+     ylim = c(90, 160), 
+     xlab = "Estymowana wartość ICF (standaryzowana)", 
+     ylab = "Obserwowana wartość ICF (standaryzowana)")
+abline(model_ICF, col = "blue", lwd = 2)  # Dodanie linii trendu w kolorze niebieskim
+
+boxplot(list(r_IFL,r_ICF,rICF_wielo, rIFL_wielo), main = 'Porównanie wartości r')
+
 
